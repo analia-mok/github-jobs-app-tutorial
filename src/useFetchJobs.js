@@ -7,8 +7,6 @@ const ACTIONS = {
   ERROR: 'error'
 };
 
-const BASE_URL = 'https://jobs.github.com/positions.json';
-
 function reducer(state, action) {
   switch(action.type) {
     case ACTIONS.MAKE_REQUEST:
@@ -33,16 +31,16 @@ export default function useFetchJobs(params, page) {
 
     dispatch({type:ACTIONS.MAKE_REQUEST});
 
-    axios.get(BASE_URL, {
+    axios.get('/.netlify/functions/node-fetch', {
       cancelToken: cancelToken.token,
       params: {
-        markdown: true,
+        markdown: false,
         page: page,
         ...params
       }
     })
     .then(res => {
-      dispatch({ type: ACTIONS.GET_DATA, payload: {jobs: res.data}})
+      dispatch({ type: ACTIONS.GET_DATA, payload: {jobs: res.data.jobs}})
     })
     .catch(e => {
       if(axios.isCancel(e)) return;
