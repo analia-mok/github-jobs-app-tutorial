@@ -4,8 +4,8 @@ const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
   try {
-    const params = querystring.parse(event.body);
-    const response = await fetch("https://jobs.github.com/positions.json", {
+    const params = querystring.stringify(event.queryStringParameters);
+    const response = await fetch(`https://jobs.github.com/positions.json?${params}`, {
       headers: { Accept: "application/json" }
     });
     if (!response.ok) {
@@ -16,7 +16,7 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ jobs: data, context })
+      body: JSON.stringify({ jobs: data, params })
     };
   } catch (err) {
     console.log(err); // output to netlify function log
